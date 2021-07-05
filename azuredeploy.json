@@ -27,11 +27,9 @@
         "minikubeStorage": "[toLower(concat(variables('minikubevm'),'storage'))]",
         "minkubePublicIP": "[toLower(concat(variables('minikubevm'),'PublicIP'))]",
         "minikubensg": "[toLower(concat(variables('minikubevm'),'-nsg'))]",
-        "minikubevnetname": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork'))]",
-        "minikubesubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-Subnet'))]",
+        "minikubevnetname": "[concat(variables('minikubevm'),'-VirtualNetwork')]",
+        "minikubesubnet": "[concat(variables('minikubevm'),'-VirtualNetwork-Subnet')]",
         "minikubenic": "[toLower(concat(variables('minikubevm'),'-NetworkInterface'))]",
-        "vnetID": "[resourceId(parameters('vNETResourceGroup'), 'Microsoft.Network/virtualNetworks', variables('minikubevnetname'))]",
-        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('minikubesubnet'))]",
         "wafsubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-WafSubnet'))]",
         "wafpassword": "[parameters('minikubePassword')]",
         "wafvmname": "[parameters('wafvmname')]"
