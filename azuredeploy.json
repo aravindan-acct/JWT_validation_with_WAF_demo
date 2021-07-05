@@ -14,7 +14,13 @@
             "metadata": {
                 "description": "VNET Resource Group Name(if an existing VNET is used)."
                 }
+            },
+        "wafvmname": {
+            "type": "string",
+            "metadata": {
+                "description": "waf vm name"
             }
+        }
        },
     "variables": {
         "minikubevm": "[parameters('minikubeVMName')]",
@@ -25,7 +31,10 @@
         "minikubesubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-Subnet'))]",
         "minikubenic": "[toLower(concat(variables('minikubevm'),'-NetworkInterface'))]",
         "vnetID": "[resourceId(parameters('vNETResourceGroup'), 'Microsoft.Network/virtualNetworks', variables('minikubevnetname'))]",
-        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('minikubesubnet'))]"
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('minikubesubnet'))]",
+        "wafsubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-WafSubnet'))]",
+        "wafpassword": "[parameters('minikubePassword')]",
+        "wafvmname": "[parameters('wafvmname')]"
 
     },
     "resources": [
@@ -121,7 +130,14 @@
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('minikubensg'))]"
                             }
                         }
+                    },
+                    {
+                        "name": "[variables('wafsubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/24"
+                        }
                     }
+
                 ]
             }
         },
@@ -226,6 +242,24 @@
                 "protectedSettings": {
                     "commandToExecute": "sudo nohup bash customScript.sh"
                 }
+            }
+        },
+        {
+            "name": "linkedDeployment1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/aravindan-acct/JWT_validation_with_WAF_demo/main/wafdeploy.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "wafvmname": "[variables('wafvmname')]",
+                    "wafvnet": "[variables('minikubevnetname')]",
+                    "wafsubnet": "[variables('wafsubnet')]",
+                    "wafpassword": "[variables('wafpassword')]"
+            }
             }
         }
     ],

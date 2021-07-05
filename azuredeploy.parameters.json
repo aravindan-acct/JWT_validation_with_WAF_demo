@@ -10,6 +10,9 @@
         },
         "vNETResourceGroup": {
             "value": "aravindanjwtdemo" 
+        },
+        "wafvmname": {
+            "value": "demowaf1"
         }
     }
 }
