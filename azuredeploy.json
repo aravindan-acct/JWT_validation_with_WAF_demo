@@ -34,7 +34,6 @@
         "wafsubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-WafSubnet'))]",
         "wafpassword": "[parameters('minikubePassword')]",
         "wafvmname": "[parameters('wafvmname')]"
-
     },
     "resources": [
         {

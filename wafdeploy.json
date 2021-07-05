@@ -28,7 +28,6 @@
                 }
         },
         "wafpassword": {
-
             "type": "securestring"
         }
 
@@ -46,7 +45,7 @@
         "imageOffer": "waf",
         "license": "byol",
         "osDiskType": "Standard_LRS",
-        "vnetID": "[resourceId(parameters('VNetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('wafvnet'))]",
+        "vnetID": "[resourceId(parameters('VNetResourceGroup'),'Microsoft.Network/virtualNetworks',variables('wafvnet'))]",
         "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('wafsubnet'))]"
     },
     "resources": [
