@@ -255,10 +255,18 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "wafvmname": "[variables('wafvmname')]",
-                    "wafvnet": "[variables('minikubevnetname')]",
-                    "wafsubnet": "[variables('wafsubnet')]",
-                    "wafpassword": "[variables('wafpassword')]"
+                    "wafvmname": {
+                        "value": "[variables('wafvmname')]"
+                    },
+                    "wafvnet": {
+                        "value":"[variables('minikubevnetname')]"
+                    },
+                    "wafsubnet": {
+                        "value": "[variables('wafsubnet')]"
+                    },
+                    "wafpassword": {
+                        "value": "[variables('wafpassword')]"
+                    }
             }
             }
         }
