@@ -23,6 +23,7 @@
         }
        },
     "variables": {
+        "vNetResourceGroup": "[parameters('vNetResourceGroup')]",
         "minikubevm": "[parameters('minikubeVMName')]",
         "minikubeStorage": "[toLower(concat(variables('minikubevm'),'storage'))]",
         "minkubePublicIP": "[toLower(concat(variables('minikubevm'),'PublicIP'))]",
@@ -255,6 +256,9 @@
                 "parameters": {
                     "wafvmname": {
                         "value": "[variables('wafvmname')]"
+                    },
+                    "vNetResourceGroup": {
+                        "value":"[variables('vNetResourceGroup')]"
                     },
                     "wafvnet": {
                         "value":"[variables('minikubevnetname')]"

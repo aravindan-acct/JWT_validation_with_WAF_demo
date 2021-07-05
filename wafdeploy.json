@@ -20,6 +20,13 @@
                 "description": "WAF subnet"
             }
         },
+        "vNETResourceGroup": {
+           "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "VNET Resource Group Name(if an existing VNET is used)."
+                }
+        },
         "wafpassword": {
 
             "type": "securestring"
@@ -38,7 +45,9 @@
         "imagePublisher": "barracudanetworks",
         "imageOffer": "waf",
         "license": "byol",
-        "osDiskType": "Standard_LRS"
+        "osDiskType": "Standard_LRS",
+        "vnetID": "[resourceId(parameters('VNetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('wafvnet'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('wafsubnet'))]"
     },
     "resources": [
         {
@@ -142,7 +151,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', variables('wafpublicip'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('wafvnet'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('wafvnet'))]"
             ],
             "tags": {
                 "displayName": "WAF-NetworkInterface"
@@ -157,7 +166,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('wafpublicip'))]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('wafvnet'), variables('wafsubnet'))]"
+                                "id": "[variables('subnetRef')]"
                             }
                         }
                     }
