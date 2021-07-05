@@ -118,7 +118,7 @@
                         "properties": {
                             "addressPrefix": "10.0.0.0/24",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'ubuntuVM1-nsg')]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('minikubensg'))]"
                             }
                         }
                     }
@@ -197,7 +197,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('ubuntuVM1storage'))).primaryEndpoints.blob]"
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower(variables('minikubeStorage')))).primaryEndpoints.blob]"
                     }
                 }
             }
