@@ -146,9 +146,9 @@ server {
     access_log            /var/log/nginx/jenkins.access.log;
 
     location / {
-      proxy_set_header        Host $host;
-      proxy_set_header        X-Real-IP $remote_addr;
-      proxy_set_header        X-Forwarded-For $remote_addr;
+      proxy_set_header        Host \$host;
+      proxy_set_header        X-Real-IP \$remote_addr;
+      proxy_set_header        X-Forwarded-For \$remote_addr;
 
       # Fix the “It appears that your reverse proxy set up is broken" error.
       proxy_pass          http://localhost:8080;
@@ -162,4 +162,5 @@ EOF
 sudo cp nginxconfig.conf nginxconfig.conf.bak
 sudo mv nginxconfig.conf /etc/nginx/sites-enabled/default
 sudo systemctl enable nginx
+sudo systemctl stop nginx
 sudo systemctl start nginx
