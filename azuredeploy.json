@@ -8,32 +8,54 @@
        "minikubePassword": {
            "type": "securestring"
        },
-       "vNETResourceGroup": {
-           "type": "string",
-            "defaultValue": "[resourceGroup().name]",
-            "metadata": {
-                "description": "VNET Resource Group Name(if an existing VNET is used)."
-                }
-            },
         "wafvmname": {
             "type": "string",
             "metadata": {
                 "description": "waf vm name"
             }
+        },
+        "wafpassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "KeycloakVmname": {
+            "type": "string"
+        },
+        "KeycloakServerPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "description"
+            }
         }
        },
     "variables": {
-        "vNetResourceGroup": "[parameters('vNetResourceGroup')]",
         "minikubevm": "[parameters('minikubeVMName')]",
-        "minikubeStorage": "[toLower(concat(variables('minikubevm'),'storage'))]",
+        "minikubeStorage": "[toLower(concat(variables('minikubevm'),uniqueString(resourceGroup().id)))]",
         "minkubePublicIP": "[toLower(concat(variables('minikubevm'),'PublicIP'))]",
         "minikubensg": "[toLower(concat(variables('minikubevm'),'-nsg'))]",
         "minikubevnetname": "[concat(variables('minikubevm'),'-VirtualNetwork')]",
         "minikubesubnet": "[concat(variables('minikubevm'),'-VirtualNetwork-Subnet')]",
         "minikubenic": "[toLower(concat(variables('minikubevm'),'-NetworkInterface'))]",
-        "wafsubnet": "[toLower(concat(variables('minikubevm'),'-VirtualNetwork-WafSubnet'))]",
-        "wafpassword": "[parameters('minikubePassword')]",
-        "wafvmname": "[parameters('wafvmname')]"
+        "wafsubnet": "[concat(variables('wafvmname'),'-VirtualNetwork-WafSubnet')]",
+        "wafpassword": "[parameters('wafpassword')]",
+        "wafvmname": "[parameters('wafvmname')]",
+        "wafstorage": "[toLower(concat('waf', uniqueString(resourceGroup().id)))]",
+        "wafPublicIP": "[concat(variables('wafvmname'), '-PublicIP' )]",
+        "wafnsg": "[concat(variables('wafvmname'), '-NSG')]",
+        "wafnic": "[concat(variables('wafvmname'), '-NIC')]",
+        "wafpublisher": "barracudanetworks",
+        "wafoffer": "waf",
+        "wafsku": "byol",
+        "wafversion": "latest",
+        "keycloakvmname": "[parameters('KeycloakVmname')]",
+        "keycloakstorage": "[tolower(concat('keycloak', uniqueString(resourceGroup().id)))]",
+        "keycloakpublicip": "[concat(variables('keycloakvmname'), '-PublicIP')]",
+        "keycloaknsg": "[concat(variables('keycloakvmname'), '-NSG')]",
+        "keycloaknic": "[concat(variables('keycloakvmname'), '-NIC')]",
+        "keycloaksubnet": "[concat(variables('keycloakvmname'), '-Subnet')]",
+        "keycloakserverpassword": "[parameters('KeycloakServerPassword')]"
     },
     "resources": [
         {
@@ -133,6 +155,12 @@
                         "name": "[variables('wafsubnet')]",
                         "properties": {
                             "addressPrefix": "10.0.1.0/24"
+                        }
+                    },
+                    {
+                        "name": "[variables('keycloaksubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.2.0/24"
                         }
                     }
 
@@ -243,32 +271,347 @@
             }
         },
         {
-            "name": "linkedDeployment1",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "name": "[toLower(variables('wafstorage'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "ubuntuVM1 Storage Account"
+            },
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "Storage"
+        },
+        {
+            "name": "[variables('wafPublicIP')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "WAF PublicIPAddress"
+            },
             "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/aravindan-acct/JWT_validation_with_WAF_demo/main/wafdeploy.json",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "wafvmname": {
-                        "value": "[variables('wafvmname')]"
-                    },
-                    "vNetResourceGroup": {
-                        "value":"[variables('vNetResourceGroup')]"
-                    },
-                    "wafvnet": {
-                        "value":"[variables('minikubevnetname')]"
-                    },
-                    "wafsubnet": {
-                        "value": "[variables('wafsubnet')]"
-                    },
-                    "wafpassword": {
-                        "value": "[variables('wafpassword')]"
-                    }
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('wafvmname'))]"
+                }
             }
+        },
+        {
+            "name": "[concat(variables('wafnsg'))]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "nsgRule1",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8000",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "nsgRule2",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "nsgRule3",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "nsgRule4",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 103,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('wafnic')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('wafPublicIP'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('minikubevnetname'))]"
+            ],
+            "tags": {
+                "displayName": "[variables('wafnic')]"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('wafPublicIP'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('minikubevnetname'), variables('wafsubnet'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('wafvmname')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('wafnic'))]"
+            ],
+            "tags": {
+                "displayName": "[variables('wafvmname')]"
+            },
+            "plan": {
+                "name": "[variables('wafsku')]",
+                "Product": "[variables('wafoffer')]",
+                "Publisher": "[variables('wafpublisher')]"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "osProfile": {
+                    "computerName": "[variables('wafvmname')]",
+                    "adminUsername": "adminUsername",
+                    "adminPassword": "[variables('wafpassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('wafpublisher')]",
+                        "offer": "[variables('wafoffer')]",
+                        "sku": "[variables('wafsku')]",
+                        "version": "[variables('wafversion')]"
+                    },
+                    "osDisk": {
+                        "name": "[concat(variables('wafvmname'), '-OSDisk')]",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('wafnic'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower(variables('wafstorage')))).primaryEndpoints.blob]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[toLower(variables('keycloakstorage'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "Keycloak Storage Account"
+            },
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "Storage"
+        },
+        {
+            "name": "[variables('keycloakpublicip')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "PublicIPAddress"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('keycloakvmname'))]"
+                }
+            }
+        },
+        {
+            "name": "[variables('keycloaknsg')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "nsgRule1",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "nsgRule2",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('keycloaknic')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('keycloakpublicip'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('minikubevnetname'))]"
+            ],
+            "tags": {
+                "displayName": "[variables('keycloaknic')]"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('keycloakpublicip'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('minikubevnetname'), variables('keycloaksubnet'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('keycloakvmname')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('keycloaknic'))]"
+            ],
+            "tags": {
+                "displayName": "[variables('keycloakvmname')]"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2_v2"
+                },
+                "osProfile": {
+                    "computerName": "[tolower(variables('keycloakvmname'))]",
+                    "adminUsername": "labuser",
+                    "adminPassword": "[variables('keycloakserverpassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "16.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "[concat(variables('keycloakvmname'), '-OSDisk')]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('keycloaknic'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower(variables('keycloakstorage')))).primaryEndpoints.blob]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(variables('keycloakvmname'), '/customScript1')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "Installation script for Keycloak Server"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', variables('keycloakvmname'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.1",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "https://raw.githubusercontent.com/aravindan-acct/JWT_validation_with_WAF_demo/main/scripts/customScript2.sh"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "nohup bash customScript2.sh"
+                }
             }
         }
     ],

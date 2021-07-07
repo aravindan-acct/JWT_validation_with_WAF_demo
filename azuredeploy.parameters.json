@@ -3,16 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "minikubeVMName": {
-            "value": "minikubevm" 
+            "value": "minikubesvr" 
         },
         "minikubePassword": {
             "value": "Pa$$w0rd123" 
         },
-        "vNETResourceGroup": {
-            "value": "aravindanjwtdemo" 
-        },
         "wafvmname": {
-            "value": "demowaf1"
+            "value": "waf1" 
+        },
+        "wafpassword": {
+            "value": "Pa$$w0rd123" 
+        },
+        "KeycloakVmname": {
+            "value": "keycloaksvr" 
+        },
+        "KeycloakServerPassword": {
+            "value": "Pa$$w0rd123" 
         }
     }
 }
