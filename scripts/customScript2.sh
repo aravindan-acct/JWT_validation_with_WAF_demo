@@ -35,7 +35,7 @@ sudo mv cfssl cfssljson /usr/local/bin/
 sudo apt-get -y install nginx
 
 # Install keycloak as a docker container
-sudo docker run -d -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=pass jboss/keycloak
+sudo docker run -d -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=pass -e PROXY_ADDRESS_FORWARDING=true jboss/keycloak
 
 
 echo $(pwd)
@@ -130,14 +130,14 @@ ls -l
 {
 cat > nginxconfig.conf << EOF
 server {
-
-    listen 443;
+    
+    listen 80;
+    listen 443 default ssl;
     server_name keycloak.cudanet.com;
 
     ssl_certificate           /etc/nginx/cert.crt;
     ssl_certificate_key       /etc/nginx/cert.key;
 
-    ssl on;
     ssl_session_cache  builtin:1000  shared:SSL:10m;
     ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
@@ -155,7 +155,7 @@ server {
       proxy_read_timeout  90;
 
       proxy_redirect      http://localhost:8080 https://keycloak.cudanet.com;
-      proxy_redirect      http://localhost https://keycloak.cudanet.com;
+      
     }
   }
 EOF
