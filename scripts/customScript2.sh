@@ -149,6 +149,7 @@ server {
       proxy_set_header        Host \$host;
       proxy_set_header        X-Real-IP \$remote_addr;
       proxy_set_header        X-Forwarded-For \$remote_addr;
+      proxy_set_header        X-Forwarded-Proto \$scheme;
 
       # Fix the “It appears that your reverse proxy set up is broken" error.
       proxy_pass          http://localhost:8080;
