@@ -513,6 +513,20 @@
                             "priority": 101,
                             "direction": "Inbound"
                         }
+                    },
+                    {
+                        "name": "nsgRule3",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Inbound"
+                        }
                     }
                 ]
             }

@@ -155,6 +155,7 @@ server {
       proxy_read_timeout  90;
 
       proxy_redirect      http://localhost:8080 https://keycloak.cudanet.com;
+      proxy_redirect      http://localhost https://keycloak.cudanet.com;
     }
   }
 EOF
