@@ -1,0 +1,186 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmssName": {
+            "value": ""
+        },
+        "location": {
+            "value": "" 
+        },
+        "vmSku": {
+            "value": "Standard_D2_v2"
+        },
+        "storageAccountName": {
+            "value": "" 
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "storageAccountNewOrExisting": {
+            "value": "new"
+        },
+        "storageAccountResourceGroup": {
+            "value": "" 
+        },
+        "dnsNameForIP": {
+            "value": "" 
+        },
+        "publicIPAddressName": {
+            "value": "" 
+        },
+        "vNETNewOrExisting": {
+            "value": "new"
+        },
+        "vNETResourceGroup": {
+            "value": "" 
+        },
+        "vNETName": {
+            "value": "" 
+        },
+        "addressPrefix": {
+            "value": "10.0.0.0/16"
+        },
+        "subnetPrefix": {
+            "value": "10.0.0.0/24"
+        },
+        "subnetName": {
+            "value": "" 
+        },
+        "instanceCount": {
+            "value": "2"
+        },
+        "minInstanceCount": {
+            "value": "1"
+        },
+        "maxInstanceCount": {
+            "value": "4"
+        },
+        "bootDiagnostics": {
+            "value": true
+        },
+        "scaleUpCpu": {
+            "value": "85"
+        },
+        "scaleUpNetworkIn": {
+            "value": "9175040"
+        },
+        "scaleUpNetworkOut": {
+            "value": "9175040"
+        },
+        "scaleDownCpu": {
+            "value": "60"
+        },
+        "scaleDownNetworkIn": {
+            "value": "5242880"
+        },
+        "scaleDownNetworkOut": {
+            "value": "5242880"
+        },
+        "azureOverprovisioning": {
+            "value": false
+        },
+        "adminPassword": {
+            "value": "" 
+        },
+        "wafSharedSecret": {
+            "value": "secret"
+        },
+        "azureAuthenticationMethod": {
+            "value": "AZURE_USER_PASSWORD"
+        },
+        "azureUserId": {
+            "value": ""
+        },
+        "azureUserPassword": {
+            "value": ""
+        },
+        "azureClientId": {
+            "value": "490510b5-6cc9-41de-95e9-44e31b0f3f36"
+        },
+        "azureTenantId": {
+            "value": "b893e0b8-2743-4fa7-81eb-0155a9060350"
+        },
+        "azureSecretKey": {
+            "value": "mMe7Q~enM6Hlz2QdpsmdAYByuvS41r6Q6.YZd"
+        },
+        "wafBootstrapMethod": {
+            "value": "BACKUP_BASED_BOOTSTRAP"
+        },
+        "azureStorageAccountName": {
+            "value": ""
+        },
+        "azureStorageAccountKey": {
+            "value": ""
+        },
+        "azureStorageBlobName": {
+            "value": ""
+        },
+        "azureBootstrapBackupFilename": {
+            "value": ""
+        },
+        "licenseStorageAccountName": {
+            "value": ""
+        },
+        "licenseStorageAccountKey": {
+            "value": ""
+        },
+        "licenseContainerName": {
+            "value": ""
+        },
+        "defaultDomainName": {
+            "value": ""
+        },
+        "eulaUserName": {
+            "value": ""
+        },
+        "eulaUserEmail": {
+            "value": ""
+        },
+        "eulaUserCompany": {
+            "value": ""
+        },
+        "wafServiceName": {
+            "value": "waf_service_1"
+        },
+        "wafServicePort": {
+            "value": "80"
+        },
+        "wafServers": {
+            "value": ""
+        },
+        "wafOmsPrimaryKey": {
+            "value": "NONE"
+        },
+        "wafOmsWorkspaceId": {
+            "value": "NONE"
+        },
+        "wafNotifyEmail": {
+            "value": ""
+        },
+        "albHealthProbeProtocol": {
+            "value": "tcp"
+        },
+        "albHealthProbePort": {
+            "value": "80"
+        },
+        "albHealthProbePath": {
+            "value": "/"
+        },
+        "albHealthProbeInterval": {
+            "value": "10"
+        },
+        "albHealthProbeUnhealthyThreshold": {
+            "value": "5"
+        },
+        "albRuleFrontEndPort": {
+            "value": "80"
+        },
+        "albRuleBackEndPort": {
+            "value": "80"
+        },
+        "albRulePersistency": {
+            "value": "SourceIPProtocol"
+        }
+    }
+}
