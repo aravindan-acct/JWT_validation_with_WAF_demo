@@ -14,10 +14,14 @@ sudo mv kubectl /usr/local/bin/
 echo "installing docker"
 sudo apt install -y docker.io
 echo "adding labuser to docker group"
-su labuser
 sudo usermod -aG docker labuser && newgrp docker
 echo "starting minikube"
+sudo -i -u labuser << EOF
+echo "starting minikube as labuser"
 minikube start --driver=docker
+echo "exiting as labuser and continuing with the rest of the script"
+EOF
+
 #export minikube_interface=`ifconfig | grep "br-" | awk {'print $1'} | tr -d ':'`
 #export minikube_ip=`ifconfig $minikube_interface | grep "inet " | awk {'print $2'} | xargs`
 export minikube_ip=`minikube ip|xargs`
