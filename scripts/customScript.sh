@@ -14,8 +14,8 @@ sudo mv kubectl /usr/local/bin/
 echo "installing docker"
 sudo apt install -y docker.io
 echo "adding labuser to docker group"
-sudo usermod -aG docker labuser && newgrp docker
 su labuser
+sudo usermod -aG docker labuser && newgrp docker
 echo "starting minikube"
 minikube start --driver=docker
 #export minikube_interface=`ifconfig | grep "br-" | awk {'print $1'} | tr -d ':'`
