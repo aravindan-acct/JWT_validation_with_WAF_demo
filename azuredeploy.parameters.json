@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "minikubeVMName": {
-            "value": "minikubesvrnew" 
+            "value": "kubesvrnew" 
         },
         "minikubePassword": {
             "value": "Pa$$w0rd123" 
