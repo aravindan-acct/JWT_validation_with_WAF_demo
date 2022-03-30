@@ -31,7 +31,7 @@ EOF
 #export minikube_ip=`ifconfig $minikube_interface | grep "inet " | awk {'print $2'} | xargs`
 export minikube_ip=`cat /home/labuser/minikube_ip.txt|xargs`
 echo $minikube_ip 
-sed -i "s/kubeip/$minikube_ip/g" minikube.conf
+sed -i "s/kubeip/$minikube_ip/g" /home/labuser/minikube.conf
 sudo cp /home/labuser/minikube.conf nginxconfig.conf.bak
 sudo mv /home/labuser/minikube.conf /etc/nginx/sites-enabled/default
 echo "========= starting nginx ========="
