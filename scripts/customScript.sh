@@ -1,30 +1,16 @@
 #! /bin/bash
 
-#Install VirtualBox hypervisor
-
-sudo apt-get update
-sudo apt remove virtualbox*
-wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-sudo su
-echo "deb https://download.virtualbox.org/virtualbox/debian xenial contrib" >> /etc/apt/sources.list
-apt-get update
-echo "yes" | sudo apt-get install -y virtualbox virtualbox-ext-pack
-
-#Install Kubectl
-sudo apt-get update && sudo apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo touch /etc/apt/sources.list.d/kubernetes.list 
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update && sudo apt-get install -y kubectl
-kubectl version
+sudo apt update -y
+sudo apt install -y curl wget apt-transport-https
+wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo cp minikube-linux-amd64 /usr/local/bin/minikube
+sudo chmod +x /usr/local/bin/minikube
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+echo "permissions set for kubectl"
+chmod +x kubectl
+echo "moving kubectl to /usr/local/bin"
+sudo mv kubectl /usr/local/bin/
+echo "installing docker"
 sudo apt install -y docker.io
-sudo usermod -aG docker $USER && newgrp docker
-
-# Install minikube
-sudo apt update
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
-
+echo "adding labuser to docker group"
+sudo usermod -aG docker labuser && newgrp docker
