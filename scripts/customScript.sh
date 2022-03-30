@@ -22,14 +22,15 @@ minikube start --driver=docker
 sudo apt-get -y install nginx
 sudo cp /home/labuser/.minikube/ca.key /etc/nginx/cert.key
 sudo cp /home/labuser/.minikube/ca.crt /etc/nginx/cert.file
-export minikube_ip=`minikube ip|xargs`
+minikube ip|xargs > /var/lib/waagent/custom-script/download/0/minikube_ip.txt
 wget https://raw.githubusercontent.com/aravindan-acct/JWT_validation_with_WAF_demo/main/scripts/minikube.conf
 echo "========= exiting as labuser and continuing with the rest of the script ========="
 echo "========= replacing kubeip string with the minikube ip ========="
-sed -i "s/kubeip/$minikube_ip/g" minikube.conf
 EOF
 #export minikube_interface=`ifconfig | grep "br-" | awk {'print $1'} | tr -d ':'`
 #export minikube_ip=`ifconfig $minikube_interface | grep "inet " | awk {'print $2'} | xargs`
+export minikube_ip=`cat minikube.txt|xargs`
+sed -i "s/kubeip/$minikube_ip/g" minikube.conf
 sudo cp /home/labuser/minikube.conf nginxconfig.conf.bak
 sudo mv /home/labuser/minikube.conf /etc/nginx/sites-enabled/default
 echo "========= starting nginx ========="
