@@ -1,0 +1,13 @@
+MANIFEST.in
+readme.md
+setup.cfg
+setup.py
+http_basic_auth/__init__.py
+http_basic_auth.egg-info/PKG-INFO
+http_basic_auth.egg-info/SOURCES.txt
+http_basic_auth.egg-info/dependency_links.txt
+http_basic_auth.egg-info/not-zip-safe
+http_basic_auth.egg-info/top_level.txt
+test/test_header.py
+test/test_latin.py
+test/test_utf8.py

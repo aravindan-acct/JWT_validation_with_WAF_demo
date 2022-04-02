@@ -1,0 +1,10 @@
+{
+    "validate-server": "Yes",
+    "client-secret": "string",
+    "endpoint": "string",
+    "type": "External",
+    "client-id": "string",
+    "name": "keycloak",
+    "bearer-access-token": "string",
+    "auth-mechanism": "Bearer Access Token"
+}

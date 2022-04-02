@@ -1,0 +1,9 @@
+{
+    "wafip":"20.225.94.62",
+    "mgmtport":8000,
+    "adminusername":"admin",
+    "adminpwd":"Pa$$w0rd123",
+    "backendip":"10.0.0.4",
+    "backendport":8443,
+    "mgmtprotocol":"http"
+}
