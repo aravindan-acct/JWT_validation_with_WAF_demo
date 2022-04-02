@@ -116,7 +116,7 @@ cfssl gencert \
   -config=ca-config.json \
   -hostname=keycloak.cudanet.com \
   -profile=keycloak \
-  admin-csr.json | cfssljson -bare keycloak
+  keycloak-csr.json | cfssljson -bare keycloak
 
 }
 ls -l
