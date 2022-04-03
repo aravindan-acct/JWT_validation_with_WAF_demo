@@ -5,6 +5,5 @@
     "type": "External",
     "client-id": "string",
     "name": "keycloak",
-    "bearer-access-token": "string",
-    "auth-mechanism": "Bearer Access Token"
+    "auth-mechanism": "Client Secret Basic"
 }

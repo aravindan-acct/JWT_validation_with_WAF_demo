@@ -67,12 +67,12 @@ def svr_config(service_name,server_name):
     svr_config_url = mgmturl+"services/"+service_name+"/servers"
     print(svr_config_url)
     data = {
-     "identifier": "IP Address",
+     "identifier": "Hostname",
      "name": server_name,
      "port": f["backendport"],
      "address-version": "IPv4",
      "ip-address": f["backendip"],
-     "comments": "Minikube server",
+     "comments": "Petstore server",
      "status": "In Service",
     }
     create_server = requests.post(svr_config_url,headers=headers,data=json.dumps(data))

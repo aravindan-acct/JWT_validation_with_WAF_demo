@@ -1,9 +1,9 @@
 {
-    "wafip":"20.225.94.62",
+    "wafip":"20.225.54.32",
     "mgmtport":8000,
     "adminusername":"admin",
     "adminpwd":"Pa$$w0rd123",
-    "backendip":"10.0.0.4",
-    "backendport":8443,
+    "backendip":"petstore.swagger.io",
+    "backendport":443,
     "mgmtprotocol":"http"
 }
