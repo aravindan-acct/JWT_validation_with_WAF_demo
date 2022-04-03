@@ -71,11 +71,12 @@ def svr_config(service_name,server_name):
      "name": server_name,
      "port": f["backendport"],
      "address-version": "IPv4",
-     "ip-address": f["backendip"],
+     "hostname": f["backendip"],
      "comments": "Petstore server",
      "status": "In Service",
     }
     create_server = requests.post(svr_config_url,headers=headers,data=json.dumps(data))
+    print(create_server.text)
     edit_server_url = svr_config_url+"/"+server_name+"/ssl-policy"
     edit_data = {
         "validate-certificate": "No",
@@ -122,6 +123,6 @@ else:
 
 # JWT validation endpoint
 jwt_val_endpoint_url = mgmturl+"jwt-validator-endpoints"
-with open("jwt_config.json", "r") as f:
+with open("jwt_waf_config.json", "r") as f:
     data = json.loads(f.read())
 print(data)

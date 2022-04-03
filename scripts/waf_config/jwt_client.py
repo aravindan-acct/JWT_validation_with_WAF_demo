@@ -45,7 +45,7 @@ print("Sending request to API with the token ...")
 #petstore request
 
 petstore_url = 'https://petstore.swagger.io/v2/pet/findByStatus?status=sold'
-headers = {"Accept": "application/json", "Authorization": "Bearer "+f'{token_response["id_token"]}'}
+headers = {"Accept": "application/json", "Host": "petstore.swagger.io" ,"Authorization": "Bearer "+f'{token_response["id_token"]}'}
 petstore_response = requests.get(petstore_url, headers=headers)
 print(f"Response from Server:\n{json.dumps(petstore_response.text)}\n\n")
 
