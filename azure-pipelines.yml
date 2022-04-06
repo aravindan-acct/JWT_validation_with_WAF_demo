@@ -10,6 +10,12 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+
+- task: AzureResourceGroupDeployment@2
+  inputs:
+    azureSubscription: '490510b5-6cc9-41de-95e9-44e31b0f3f36'
+    action: 'deleteRG'
+    resourceGroupName: 'aravindanjwtdemo_2'
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
