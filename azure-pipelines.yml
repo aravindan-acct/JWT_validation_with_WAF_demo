@@ -15,6 +15,13 @@ steps:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'JWTValidationDeploy'
     subscriptionId: '490510b5-6cc9-41de-95e9-44e31b0f3f36'
+    action: 'DeleteRG'
+    resourceGroupName: 'aravindanjwtdemo_2'
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'JWTValidationDeploy'
+    subscriptionId: '490510b5-6cc9-41de-95e9-44e31b0f3f36'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'aravindanjwtdemo_2'
     location: 'South Central US'
