@@ -70,7 +70,6 @@ def svr_config(service_name,server_name):
      "identifier": "Hostname",
      "name": server_name,
      "port": f["backendport"],
-     "address-version": "IPv4",
      "hostname": f["backendip"],
      "comments": "Petstore server",
      "status": "In Service",

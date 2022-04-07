@@ -21,6 +21,7 @@ parser.add_argument('-c', '--clientsecret', type=str, help="openid client secret
 args = parser.parse_args()
 requests.packages.urllib3.disable_warnings()
 keycloak_url = 'https://'+args.server+'/auth/realms/master/protocol/openid-connect/token'
+print(keycloak_url)
 data = {
     "grant_type":"password",
     "client_id": "kube",
@@ -46,6 +47,8 @@ print("Sending request to API with the token ...")
 
 petstore_url = 'https://petstore.swagger.io/v2/pet/findByStatus?status=sold'
 headers = {"Accept": "application/json", "Host": "petstore.swagger.io" ,"Authorization": "Bearer "+f'{token_response["id_token"]}'}
+
+
 petstore_response = requests.get(petstore_url, headers=headers)
 print(f"Response from Server:\n{json.dumps(petstore_response.text)}\n\n")
 
